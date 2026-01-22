@@ -1,5 +1,5 @@
 {
-    "name": "sam/laravisor",
+    "name": "laravisor/laravisor",
     "description": "Security-first Laravel error monitoring with optional storage and client-side notifications",
     "type": "library",
     "license": "MIT",
