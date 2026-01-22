@@ -33,7 +33,7 @@ It is built with **developer experience first**:
 ## Installation
 
 ```bash
-composer require sam/laravisor
+composer require laravisor/laravisor
 ```
 
 ---
