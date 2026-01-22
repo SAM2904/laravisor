@@ -1,0 +1,22 @@
+{
+    "name": "sam/laravisor",
+    "description": "Security-first Laravel error monitoring with optional storage and client-side notifications",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sam\\Laravisor\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sam\\Laravisor\\Providers\\LaravisorServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
+    }
+}
