@@ -81,6 +81,30 @@ public function register(Throwable $e): void
 ⚠️ **This step is mandatory**.
 Without this, Laravisor will NOT capture exceptions.
 
+## 🔐 Required `.env` Variables
+
+Laravisor requires the following environment variables to be defined in your application’s `.env` file.
+
+```env
+LV_ENABLED=true
+LV_ENVIRONMENTS=local
+LV_NOTIFY_EMAILS="test_one@org.in,test_two@org.in,test_three@org.in"
+```
+
+### Description
+
+| Variable           | Required | Description                                                                                                  |
+| ------------------ | -------- | ------------------------------------------------------------------------------------------------------------ |
+| `LV_ENABLED`       | ✅ Yes    | Enables or disables Laravisor globally                                                                       |
+| `LV_ENVIRONMENTS`  | ✅ Yes    | Comma-separated list of environments where Laravisor should capture errors (e.g. `production,staging,local`) |
+| `LV_NOTIFY_EMAILS` | ✅ Yes    | Comma-separated list of email addresses to receive error notifications                                       |
+
+⚠️ **Notes**
+
+* If `LV_ENABLED=false`, Laravisor will not capture or notify errors.
+* Errors are reported **only** when the current `APP_ENV` matches `LV_ENVIRONMENTS`.
+* Email notifications depend entirely on `LV_NOTIFY_EMAILS`.
+
 ---
 
 ## ⚡ Quick Start (Email Notifications)
@@ -184,3 +208,4 @@ Laravisor is designed to **never break your application**:
 ## 📄 License
 
 MIT License © Laravisor
+
