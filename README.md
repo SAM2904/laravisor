@@ -1,44 +1,43 @@
 # Laravisor
 
-Laravisor is a Laravel-native error monitoring package that captures exceptions, sends instant notifications, and optionally stores errors in a central dashboard — without ever breaking your application flow.
+Laravisor is a Laravel-native error monitoring package that captures exceptions and sends instant email notifications directly from your application — with zero impact on application stability.
 
-It is built with **developer experience first**:
-- Works immediately after installation
-- No API key required to receive error emails
-- Central dashboard is fully optional
+It works **out-of-the-box**, does **not require an API key**, and optionally integrates with the Laravisor Console for centralized error dashboards.
 
 ---
 
-## Features
+## ✨ Features
 
 - Automatic exception capturing
-- Zero-config email notifications
+- Instant email notifications
 - Environment-based reporting
 - Exception ignore list
 - Safe, non-blocking execution
 - Optional local database storage
-- Optional Laravisor Server integration
-- Laravel-first design
+- Optional Laravisor Console integration
+- Laravel-first architecture
 
 ---
 
-## Requirements
+## 📋 Requirements
 
 - PHP 8.1+
 - Laravel 9.x / 10.x / 11.x
-- Mail configuration (for notifications)
+- Mail configuration (SMTP / Mailer)
 
 ---
 
-## Installation
+## 📦 Installation
+
+Install via Composer:
 
 ```bash
 composer require laravisor/laravisor
-```
+````
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
 Publish the configuration file:
 
@@ -46,7 +45,7 @@ Publish the configuration file:
 php artisan vendor:publish --tag=laravisor-config
 ```
 
-This creates:
+This will create:
 
 ```bash
 config/laravisor.php
@@ -54,112 +53,134 @@ config/laravisor.php
 
 ---
 
-## Quick Start (No Server Required)
+## 🧠 IMPORTANT: Register the Exception Handler
 
-Once installed:
+Laravisor requires you to **explicitly report exceptions** using its handler.
 
-- Exceptions are captured automatically
-- Error emails are sent instantly
-- No API key or dashboard setup required
+### Step 1️⃣ Open Laravel Exception Handler
 
-This is the default behavior.
+```php
+app/Exceptions/Handler.php
+```
+
+### Step 2️⃣ Add Laravisor reporting inside `register()` method
+
+```php
+use Sam\Laravisor\Exception\LaravisorExceptionHandler;
+
+public function register(Throwable $e): void
+{
+    $this->reportable(function (Throwable $e) {
+        LaravisorExceptionHandler::report($e);
+    });
+
+    parent::report($e);
+}
+```
+
+⚠️ **This step is mandatory**.
+Without this, Laravisor will NOT capture exceptions.
 
 ---
 
-## Configuration Example
+## ⚡ Quick Start (Email Notifications)
+
+Once installed and handler is registered:
+
+* Exceptions are captured automatically
+* Emails are sent instantly
+* No API key or dashboard setup required
+
+Nothing else is required ✅
+
+---
+
+## 🛠 Configuration Example
 
 ```php
 return [
 
+    /*
+    |--------------------------------------------------------------------------
+    | Enable / Disable Laravisor
+    |--------------------------------------------------------------------------
+    */
     'enabled' => true,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Environments to Capture Errors
+    |--------------------------------------------------------------------------
+    */
     'environments' => ['production', 'staging', 'local'],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Notification Emails
+    |--------------------------------------------------------------------------
+    */
     'notify_emails' => [
         'dev@example.com',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Ignore Specific Exceptions
+    |--------------------------------------------------------------------------
+    */
     'ignore_exceptions' => [
         Illuminate\Auth\AuthenticationException::class,
+        Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class,
     ],
 
-    // Optional local storage
+    /*
+    |--------------------------------------------------------------------------
+    | Local Database Storage (Optional)
+    |--------------------------------------------------------------------------
+    */
     'store_locally' => false,
-
-    // Optional Laravisor Server
-    'server' => [
-        'enabled' => false,
-        'endpoint' => env('LARAVISOR_SERVER_URL'),
-        'api_key' => env('LARAVISOR_API_KEY'),
-    ],
 
 ];
 ```
 
 ---
 
-## Operating Modes
+## 🌐 Laravisor Console (Optional)
 
-Laravisor adapts automatically based on configuration:
+Laravisor Console is an **optional centralized dashboard** that allows you to:
 
-| Mode | API Key | Emails | Storage | Dashboard |
-|----|----|----|----|----|
-Quick Start | ❌ | ✅ | ❌ | ❌ |
-Developer Mode | ❌ | ✅ | Local DB | ❌ |
-Full Mode | ✅ | ✅ | Central Server | ✅ |
+* View grouped errors
+* Inspect stack traces
+* Track occurrences
+* Resolve or ignore errors
 
----
+🔑 **API key is required only for Console integration**
+📧 **Email notifications work without any key**
 
-## Local Error Storage (Optional)
-
-Enable storing errors in your application database:
-
-```php
-'store_locally' => true,
-```
-
-This does not require Laravisor Server or an API key.
+> If Console is not configured, Laravisor continues to work normally.
 
 ---
 
-## Laravisor Server (Optional)
+## 🛡 Safety & Stability Guarantees
 
-Laravisor Server provides:
-- Centralized error storage
-- Grouped error viewer
-- Error resolution workflow
-- Project-based dashboards
+Laravisor is designed to **never break your application**:
 
-Enable via `.env`:
-
-```env
-LARAVISOR_SERVER_URL=https://your-server-url
-LARAVISOR_API_KEY=your-project-key
-```
-
-```php
-'server' => [
-    'enabled' => true,
-],
-```
-
-Without a valid key:
-- Errors are not stored on the server
-- Notifications continue to work normally
+* All internal operations are wrapped in `try/catch`
+* Network failures are silently ignored
+* Email failures never affect requests
+* Safe for queues, cron jobs, and schedulers
 
 ---
 
-## Safety Guarantees
+## 👨‍💻 Author
 
-Laravisor is designed to **never affect your application**:
+**Developed by Sudhanshu Mittal**
 
-- All internal logic is wrapped in try/catch
-- Network failures are ignored
-- Email failures are ignored
-- Safe for queues, schedulers, and cron jobs
+* GitHub: [https://github.com/sam2904](https://github.com/sam2904)
+* LinkedIn: [https://www.linkedin.com/in/sudhanshu-mittal](https://www.linkedin.com/in/sudhanshu-mittal)
 
 ---
 
-## License
+## 📄 License
 
 MIT License © Laravisor
