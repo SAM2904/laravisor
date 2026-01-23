@@ -157,13 +157,6 @@ return [
         Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class,
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Local Database Storage (Optional)
-    |--------------------------------------------------------------------------
-    */
-    'store_locally' => false,
-
 ];
 ```
 
@@ -208,4 +201,5 @@ Laravisor is designed to **never break your application**:
 ## 📄 License
 
 MIT License © Laravisor
+
 
